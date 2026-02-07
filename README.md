@@ -1,10 +1,20 @@
-# OpenAPI Spec
+<p align="center">
+  <img src="https://cdn.stemp.app/logo/color.svg" alt="stemp" height="64" />
+</p>
 
-[![Sync](https://github.com/stempapp/openapi/actions/workflows/sync-openapi.yml/badge.svg)](https://github.com/stempapp/openapi/actions/workflows/sync-openapi.yml)
-[![Validate](https://github.com/stempapp/openapi/actions/workflows/validate-openapi.yml/badge.svg)](https://github.com/stempapp/openapi/actions/workflows/validate-openapi.yml)
+<h3 align="center">OpenAPI Spec</h3>
 
-Automatisch synchronisierte OpenAPI-Spezifikation der stemp Production API.
-Grundlage für die automatische SDK-Generierung.
+<p align="center">
+  Automatisch synchronisierte OpenAPI-Spezifikation der stemp API.<br/>
+  Grundlage für die automatische SDK-Generierung.
+</p>
+
+<p align="center">
+  <a href="https://github.com/stempapp/openapi/actions/workflows/sync-openapi.yml"><img src="https://github.com/stempapp/openapi/actions/workflows/sync-openapi.yml/badge.svg" alt="Sync" /></a>
+  <a href="https://github.com/stempapp/openapi/actions/workflows/validate-openapi.yml"><img src="https://github.com/stempapp/openapi/actions/workflows/validate-openapi.yml/badge.svg" alt="Validate" /></a>
+</p>
+
+---
 
 ## Wie es funktioniert
 
@@ -15,51 +25,29 @@ Production API ──[03:00 CET]──▸ GitHub Actions ──▸ openapi.json 
 | Was | Details |
 |-----|---------|
 | **Sync-Zyklus** | Täglich um 03:00 Uhr CET |
-| **Quelle** | Production API (URL als Secret hinterlegt) |
 | **Format** | OpenAPI 3.x, pretty-printed & key-sorted JSON |
 | **Validierung** | Spectral Linting bei jedem Push |
+| **Trigger** | Automatisch (Schedule) oder manuell (Actions → Run workflow) |
 
-## Setup
+## SDK-Generierung
 
-### 1. GitHub Secret anlegen
-
-Das Repository benötigt ein Secret mit der API-URL:
-
-```
-Repository Settings → Secrets and variables → Actions → New repository secret
-```
-
-| Name | Wert |
-|------|------|
-| `OPENAPI_URL` | Die vollständige URL zum OpenAPI-Endpoint |
-
-### 2. Manueller Sync
-
-Der Workflow kann jederzeit manuell ausgelöst werden:
-
-```
-Actions → Sync OpenAPI Spec → Run workflow
-```
-
-## Für SDK-Generierung
-
-Die `openapi.json` kann als Quelle für Code-Generatoren verwendet werden:
+Die `openapi.json` kann direkt als Quelle für Code-Generatoren verwendet werden:
 
 ```bash
-# Beispiel mit openapi-generator
+# openapi-generator
 npx @openapitools/openapi-generator-cli generate \
   -i https://raw.githubusercontent.com/stempapp/openapi/main/openapi.json \
   -g typescript-axios \
   -o ./sdk
 
-# Beispiel mit orval
+# orval
 npx orval --input https://raw.githubusercontent.com/stempapp/openapi/main/openapi.json
 ```
 
 ## Spec lokal anschauen
 
 ```bash
-# Mit Swagger UI
+# Swagger UI
 npx @redocly/cli preview openapi.json
 
 # Oder direkt im Browser
