@@ -54,8 +54,11 @@ jobs:
             exit 1
           fi
 
-          # Pretty-print for readable diffs
-          jq --sort-keys '.' spec_raw.json > "$SPEC_FILE"
+          # Remove /admin endpoints and pretty-print for readable diffs
+          jq --sort-keys '
+            .paths |= with_entries(select(.key | test("^/admin|/admin/") | not)) |
+            .tags |= (if . then [.[] | select(.name | test("^admin"; "i") | not)] else . end)
+          ' spec_raw.json > "$SPEC_FILE"
           rm spec_raw.json
 
           echo "::endgroup::"
@@ -84,7 +87,8 @@ jobs:
       - name: Detect changes
         id: diff
         run: |
-          if git diff --quiet "$SPEC_FILE" 2>/dev/null; then
+          # Check both tracked changes AND untracked new files
+          if git diff --quiet "$SPEC_FILE" 2>/dev/null && git ls-files --error-unmatch "$SPEC_FILE" 2>/dev/null; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No changes detected." >> "$GITHUB_STEP_SUMMARY"
           else
