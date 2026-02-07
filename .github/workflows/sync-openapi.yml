@@ -54,10 +54,13 @@ jobs:
             exit 1
           fi
 
-          # Remove /admin endpoints and pretty-print for readable diffs
+          # Remove all admin-related paths, tags, and schemas
           jq --sort-keys '
-            .paths |= with_entries(select(.key | test("^/admin|/admin/") | not)) |
-            .tags |= (if . then [.[] | select(.name | test("^admin"; "i") | not)] else . end)
+            .paths |= with_entries(select(.key | test("/admin"; "i") | not)) |
+            .tags |= (if . then [.[] | select(.name | test("admin"; "i") | not)] else . end) |
+            .components.schemas |= (if . then with_entries(select(.key | test("^Admin") | not)) else . end) |
+            .components.requestBodies |= (if . then with_entries(select(.key | test("^Admin") | not)) else . end) |
+            .components.responses |= (if . then with_entries(select(.key | test("^Admin") | not)) else . end)
           ' spec_raw.json > "$SPEC_FILE"
           rm spec_raw.json
 
