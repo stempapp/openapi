@@ -1,5 +1,7 @@
 {
   "components": {
+    "requestBodies": null,
+    "responses": null,
     "schemas": {
       "AcceptInvitationRequest": {
         "properties": {
@@ -166,242 +168,6 @@
             "type": "string"
           }
         },
-        "type": "object"
-      },
-      "AdminAppListResponse": {
-        "properties": {
-          "apps": {
-            "items": {
-              "$ref": "#/components/schemas/AdminAppResponse"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "apps"
-        ],
-        "type": "object"
-      },
-      "AdminAppResponse": {
-        "properties": {
-          "category": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "developerName": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "installCount": {
-            "format": "int64",
-            "type": "integer"
-          },
-          "isGlobal": {
-            "type": "boolean"
-          },
-          "isPublished": {
-            "type": "boolean"
-          },
-          "logoUrl": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "object": {
-            "type": "string"
-          },
-          "publishedVersionNumber": {
-            "type": "string"
-          },
-          "publisherId": {
-            "type": "string"
-          },
-          "publisherName": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "tags": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "updatedAt": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "createdAt",
-          "id",
-          "installCount",
-          "isGlobal",
-          "isPublished",
-          "name",
-          "object",
-          "slug",
-          "tags",
-          "updatedAt"
-        ],
-        "type": "object"
-      },
-      "AdminCertificateRequestResponse": {
-        "properties": {
-          "adminNotes": {
-            "type": "string"
-          },
-          "amountCents": {
-            "format": "int32",
-            "type": "integer"
-          },
-          "assignedToEmail": {
-            "type": "string"
-          },
-          "assignedToId": {
-            "type": "string"
-          },
-          "certificateId": {
-            "type": "string"
-          },
-          "completedAt": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "createdByEmail": {
-            "type": "string"
-          },
-          "createdById": {
-            "type": "string"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "organizationId": {
-            "type": "string"
-          },
-          "organizationName": {
-            "type": "string"
-          },
-          "paidAt": {
-            "type": "string"
-          },
-          "passTypeIdentifier": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "stripeCheckoutSessionId": {
-            "type": "string"
-          },
-          "stripePaymentIntentId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "createdAt",
-          "createdById",
-          "currency",
-          "displayName",
-          "id",
-          "organizationId",
-          "organizationName",
-          "passTypeIdentifier",
-          "status"
-        ],
-        "type": "object"
-      },
-      "AdminCustomDesignRequestResponse": {
-        "properties": {
-          "assignedToEmail": {
-            "type": "string"
-          },
-          "assignedToId": {
-            "type": "string"
-          },
-          "completedAt": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "createdByEmail": {
-            "type": "string"
-          },
-          "createdById": {
-            "type": "string"
-          },
-          "customIndustry": {
-            "type": "string"
-          },
-          "hasExistingCard": {
-            "type": "boolean"
-          },
-          "id": {
-            "type": "string"
-          },
-          "industry": {
-            "type": "string"
-          },
-          "notes": {
-            "type": "string"
-          },
-          "organizationId": {
-            "type": "string"
-          },
-          "organizationName": {
-            "type": "string"
-          },
-          "slackNotificationSent": {
-            "type": "boolean"
-          },
-          "socialMedia": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "storeName": {
-            "type": "string"
-          },
-          "templateId": {
-            "type": "string"
-          },
-          "templateName": {
-            "type": "string"
-          },
-          "website": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "createdById",
-          "hasExistingCard",
-          "id",
-          "organizationId",
-          "organizationName",
-          "slackNotificationSent",
-          "status",
-          "storeName",
-          "templateId"
-        ],
         "type": "object"
       },
       "AllScopesResponse": {
@@ -13521,10 +13287,6 @@
       "name": "Template API"
     },
     {
-      "description": "Platform admin endpoints for reviewing app versions",
-      "name": "App Review (Admin)"
-    },
-    {
       "description": "Permission scopes information",
       "name": "Scopes"
     },
@@ -13555,10 +13317,6 @@
     {
       "description": "Endpoints for checking organization Apple certificate status",
       "name": "Organization Certificate API"
-    },
-    {
-      "description": "Platform admin endpoints for managing apps",
-      "name": "App Management (Admin)"
     },
     {
       "description": "Create ur template based on a preset",
