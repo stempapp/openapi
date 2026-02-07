@@ -1,0 +1,63 @@
+name: Validate OpenAPI Spec
+
+on:
+  push:
+    paths:
+      - "openapi.json"
+  pull_request:
+    paths:
+      - "openapi.json"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install spectral
+        run: npm install -g @stoplight/spectral-cli
+
+      - name: Validate OpenAPI spec
+        run: spectral lint openapi.json --ruleset .spectral.yml
+
+  stats:
+    name: Spec Statistics
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Generate stats
+        run: |
+          echo "### OpenAPI Spec Stats" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          VERSION=$(jq -r '.info.version // "?"' openapi.json)
+          PATHS=$(jq '[.paths | keys[]] | length' openapi.json)
+          METHODS=$(jq '[.paths[][] | select(.operationId)] | length' openapi.json)
+          SCHEMAS=$(jq '[.components.schemas // {} | keys[]] | length' openapi.json)
+          TAGS=$(jq '[.paths[][] | .tags[]? ] | unique | length' openapi.json)
+
+          echo "| Metric | Count |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Version | \`$VERSION\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Paths | $PATHS |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Operations | $METHODS |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Schemas | $SCHEMAS |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Tags | $TAGS |" >> "$GITHUB_STEP_SUMMARY"

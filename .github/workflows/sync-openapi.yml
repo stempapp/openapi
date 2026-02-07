@@ -1,0 +1,148 @@
+name: Sync OpenAPI Spec
+
+on:
+  schedule:
+    # Jeden Tag um 03:00 Uhr CET (02:00 UTC)
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force commit even if spec unchanged"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-openapi
+  cancel-in-progress: true
+
+env:
+  SPEC_FILE: openapi.json
+
+jobs:
+  sync:
+    name: Fetch & Commit OpenAPI Spec
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Fetch OpenAPI spec
+        run: |
+          echo "::group::Fetching OpenAPI spec"
+
+          HTTP_CODE=$(curl -s -o spec_raw.json -w "%{http_code}" \
+            --retry 3 \
+            --retry-delay 10 \
+            --max-time 30 \
+            "${{ secrets.OPENAPI_URL }}")
+
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "::error::API returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          if ! jq empty spec_raw.json 2>/dev/null; then
+            echo "::error::Response is not valid JSON"
+            exit 1
+          fi
+
+          # Pretty-print for readable diffs
+          jq --sort-keys '.' spec_raw.json > "$SPEC_FILE"
+          rm spec_raw.json
+
+          echo "::endgroup::"
+
+      - name: Extract API metadata
+        id: meta
+        run: |
+          TITLE=$(jq -r '.info.title // "Unknown"' "$SPEC_FILE")
+          VERSION=$(jq -r '.info.version // "unknown"' "$SPEC_FILE")
+          PATHS=$(jq '[.paths | keys[]] | length' "$SPEC_FILE")
+          SCHEMAS=$(jq '[.components.schemas // {} | keys[]] | length' "$SPEC_FILE")
+
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
+          echo "schemas=$SCHEMAS" >> "$GITHUB_OUTPUT"
+
+          echo "### API Metadata" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Title | $TITLE |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Version | $VERSION |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Paths | $PATHS |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Schemas | $SCHEMAS |" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet "$SPEC_FILE" 2>/dev/null; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+
+            # Build a human-readable diff summary
+            if git show HEAD:"$SPEC_FILE" > /dev/null 2>&1; then
+              git show HEAD:"$SPEC_FILE" > old_spec.json
+
+              ADDED_PATHS=$(diff <(jq -r '.paths | keys[]' old_spec.json 2>/dev/null || true) \
+                                 <(jq -r '.paths | keys[]' "$SPEC_FILE") | grep '^>' | sed 's/^> //' || true)
+              REMOVED_PATHS=$(diff <(jq -r '.paths | keys[]' old_spec.json 2>/dev/null || true) \
+                                   <(jq -r '.paths | keys[]' "$SPEC_FILE") | grep '^<' | sed 's/^< //' || true)
+              ADDED_SCHEMAS=$(diff <(jq -r '.components.schemas // {} | keys[]' old_spec.json 2>/dev/null || true) \
+                                   <(jq -r '.components.schemas // {} | keys[]' "$SPEC_FILE") | grep '^>' | sed 's/^> //' || true)
+              REMOVED_SCHEMAS=$(diff <(jq -r '.components.schemas // {} | keys[]' old_spec.json 2>/dev/null || true) \
+                                     <(jq -r '.components.schemas // {} | keys[]' "$SPEC_FILE") | grep '^<' | sed 's/^< //' || true)
+
+              rm old_spec.json
+
+              SUMMARY=""
+              [ -n "$ADDED_PATHS" ] && SUMMARY="${SUMMARY}Added paths: $(echo "$ADDED_PATHS" | wc -l | tr -d ' '). "
+              [ -n "$REMOVED_PATHS" ] && SUMMARY="${SUMMARY}Removed paths: $(echo "$REMOVED_PATHS" | wc -l | tr -d ' '). "
+              [ -n "$ADDED_SCHEMAS" ] && SUMMARY="${SUMMARY}Added schemas: $(echo "$ADDED_SCHEMAS" | wc -l | tr -d ' '). "
+              [ -n "$REMOVED_SCHEMAS" ] && SUMMARY="${SUMMARY}Removed schemas: $(echo "$REMOVED_SCHEMAS" | wc -l | tr -d ' '). "
+
+              if [ -z "$SUMMARY" ]; then
+                SUMMARY="Spec content modified."
+              fi
+            else
+              SUMMARY="Initial spec import."
+            fi
+
+            echo "summary=$SUMMARY" >> "$GITHUB_OUTPUT"
+
+            echo "### Changes Detected" >> "$GITHUB_STEP_SUMMARY"
+            echo "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Commit & push
+        if: steps.diff.outputs.changed == 'true' || inputs.force == 'true'
+        env:
+          API_VERSION: ${{ steps.meta.outputs.version }}
+          CHANGE_SUMMARY: ${{ steps.diff.outputs.summary }}
+          PATH_COUNT: ${{ steps.meta.outputs.paths }}
+          SCHEMA_COUNT: ${{ steps.meta.outputs.schemas }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add "$SPEC_FILE"
+
+          COMMIT_MSG="chore: sync openapi spec (v${API_VERSION})
+
+          ${CHANGE_SUMMARY}
+
+          Paths: ${PATH_COUNT} | Schemas: ${SCHEMA_COUNT}
+          Synced from production API."
+
+          git commit -m "$COMMIT_MSG"
+          git push

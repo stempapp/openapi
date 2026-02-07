@@ -1,0 +1,9 @@
+extends:
+  - spectral:oas
+
+rules:
+  # Relax some rules that are too strict for auto-synced specs
+  info-contact: off
+  info-description: off
+  oas3-api-servers: off
+  operation-description: off
