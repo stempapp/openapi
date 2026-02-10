@@ -9855,7 +9855,7 @@
     },
     "/v1/templates": {
       "get": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:read`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:read`",
         "operationId": "getTemplates",
         "responses": {
           "200": {
@@ -9878,12 +9878,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:read"
         ]
@@ -9891,7 +9894,7 @@
     },
     "/v1/templates/default": {
       "get": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:read`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:read`",
         "operationId": "getDefaultTemplate",
         "responses": {
           "200": {
@@ -9911,12 +9914,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:read"
         ]
@@ -9924,7 +9930,7 @@
     },
     "/v1/templates/from_preset/{presetId}": {
       "post": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:create`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:create`",
         "operationId": "createTemplateFromPreset",
         "parameters": [
           {
@@ -9964,12 +9970,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:create"
         ]
@@ -9977,7 +9986,7 @@
     },
     "/v1/templates/onboarding": {
       "post": {
-        "description": "**Auth Methods:** JWT\n\n**Required Scopes:** `template:create`",
+        "description": "**Auth Methods:** JWT, APP_INSTALLATION\n\n**Required Scopes:** `template:create`",
         "operationId": "createTemplateFromOnboarding",
         "requestBody": {
           "content": {
@@ -10004,12 +10013,15 @@
         "security": [
           {
             "JWT-Cookie": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT",
+        "x-auth-methods": "JWT, APP_INSTALLATION",
         "x-required-scopes": [
           "template:create"
         ]
@@ -10070,7 +10082,7 @@
     },
     "/v1/templates/{templateId}": {
       "delete": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:delete`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:delete`",
         "operationId": "deleteTemplate",
         "parameters": [
           {
@@ -10100,18 +10112,21 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:delete"
         ]
       },
       "get": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:read`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:read`",
         "operationId": "getTemplate",
         "parameters": [
           {
@@ -10141,18 +10156,21 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:read"
         ]
       },
       "put": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:update`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:update`",
         "operationId": "updateTemplate",
         "parameters": [
           {
@@ -10192,12 +10210,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:update"
         ]
@@ -10824,7 +10845,7 @@
     },
     "/v1/templates/{templateId}/custom-design-status": {
       "get": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:read`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:read`",
         "operationId": "getCustomDesignStatus",
         "parameters": [
           {
@@ -10854,12 +10875,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:read"
         ]
@@ -11074,7 +11098,7 @@
     },
     "/v1/templates/{templateId}/has-custom-strip": {
       "get": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:read`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:read`",
         "operationId": "hasCustomStrip",
         "parameters": [
           {
@@ -11104,12 +11128,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:read"
         ]
@@ -11233,7 +11260,7 @@
     },
     "/v1/templates/{templateId}/pass-statistics": {
       "get": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:read`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:read`",
         "operationId": "getPassStatistics",
         "parameters": [
           {
@@ -11263,12 +11290,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:read"
         ]
@@ -11521,7 +11551,7 @@
     },
     "/v1/templates/{templateId}/preview": {
       "get": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:read`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:read`",
         "operationId": "getOrCreatePreview",
         "parameters": [
           {
@@ -11551,12 +11581,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:read"
         ]
@@ -11564,7 +11597,7 @@
     },
     "/v1/templates/{templateId}/reset-to-preset": {
       "post": {
-        "description": "**Auth Methods:** JWT, API_TOKEN\n\n**Required Scopes:** `template:update`",
+        "description": "**Auth Methods:** JWT, API_TOKEN, APP_INSTALLATION\n\n**Required Scopes:** `template:update`",
         "operationId": "resetTemplateToPreset",
         "parameters": [
           {
@@ -11594,12 +11627,15 @@
           },
           {
             "API-Token": []
+          },
+          {
+            "App-Installation": []
           }
         ],
         "tags": [
           "Template API"
         ],
-        "x-auth-methods": "JWT, API_TOKEN",
+        "x-auth-methods": "JWT, API_TOKEN, APP_INSTALLATION",
         "x-required-scopes": [
           "template:update"
         ]
