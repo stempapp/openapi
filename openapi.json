@@ -2939,6 +2939,17 @@
         ],
         "type": "object"
       },
+      "MobileTokenRequest": {
+        "properties": {
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "type": "object"
+      },
       "OAuth2ConnectionResponse": {
         "properties": {
           "createdAt": {
@@ -8471,6 +8482,74 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/Member"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "auth-resource"
+        ]
+      }
+    },
+    "/v1/auth/mobile/callback": {
+      "get": {
+        "operationId": "mobileCallback",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "oidc_token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "oidc_refresh_token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "auth-resource"
+        ]
+      }
+    },
+    "/v1/auth/mobile/token": {
+      "post": {
+        "operationId": "mobileTokenExchange",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MobileTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
                 }
               }
             },
