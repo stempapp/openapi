@@ -2903,6 +2903,9 @@
           "id": {
             "type": "string"
           },
+          "impersonatedBy": {
+            "type": "string"
+          },
           "intercomUserId": {
             "type": "string"
           },
@@ -8786,6 +8789,26 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "auth-resource"
+        ]
+      }
+    },
+    "/v1/auth/stop-impersonation": {
+      "post": {
+        "operationId": "stopImpersonation",
         "responses": {
           "200": {
             "content": {
