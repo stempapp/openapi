@@ -12076,7 +12076,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/WalletPass"
+                  "$ref": "#/components/schemas/WalletPassWithUserDTO"
                 }
               }
             },
@@ -12429,7 +12429,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/WalletPass"
+                  "$ref": "#/components/schemas/WalletPassWithUserDTO"
                 }
               }
             },
